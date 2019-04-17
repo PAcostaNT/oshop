@@ -21,6 +21,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.subscription = this.prodService.getAll().subscribe(snapshots => {
       snapshots.forEach((snapshot, i) => {
         this.products[i] = snapshot.payload.val() as Product;
+        this.products[i].key = snapshot.payload.key;
+        console.log(snapshot.payload)
         // console.log( snapshot.payload.val());
       });
       this.initializeTable(this.products);
@@ -35,7 +37,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
   private initializeTable(products: Product[]) {
     this.table = new DataTableResource(products);
-    this.table.query({ offset: 0 }).then(items => (this.items = items));
+    this.table.query({ offset: 0 }).then(items => {console.log(items);(this.items = items)});
     this.table.count().then(count => (this.itemCount = count));
   }
 
