@@ -1,6 +1,10 @@
-import { AppUser } from './../models/app-user';
+import { ShoppingCartService } from "./../shopping-cart.service";
+import { AppUser } from "./../models/app-user";
 import { AuthService } from "./../auth.service";
 import { Component, OnInit } from "@angular/core";
+import { ShoppingCart } from "../models/shopping-cart";
+import { AngularFireObject } from "angularfire2/database";
+import { Observable } from "rxjs";
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -8,13 +12,18 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./bs-navbar.component.html",
   styleUrls: ["./bs-navbar.component.scss"]
 })
-export class BsNavbarComponent {
+export class BsNavbarComponent implements OnInit {
+  constructor(
+    private auth: AuthService,
+    private cartService: ShoppingCartService
+  ) {}
+  cart$: Observable<ShoppingCart>;
   appUser: AppUser;
-  constructor(private auth: AuthService) {
-    auth.appUser$.subscribe(appuser => this.appUser = appuser);
+  async ngOnInit() {
+    this.auth.appUser$.subscribe(appuser => (this.appUser = appuser));
+    this.cart$ = await this.cartService.getCart();
   }
-
-  logout() {
+  ut() {
     this.auth.logout();
   }
 }
