@@ -1,6 +1,10 @@
 <h1>Shopping Cart</h1>
 <div class="row col-10" *ngIf="(cart$ | async) as cart">
-  <p>You have {{ cart.totalItemsCount }} items in your shopping cart</p>
+  <p>You have {{ cart.totalItemsCount }} items in your shopping cart
+      <button class="btn btn-light btn-sm" (click)="clearCart()">
+          Clear Shopping Cart
+        </button>
+  </p>
   <table class="table">
     <thead>
       <tr>
@@ -12,10 +16,20 @@
     </thead>
     <tbody>
       <tr *ngFor="let item of cart.items">
-        <td><div [style.backgroundImage]="'url(' + item.product.imageUrl + ')'" class="thumbnail"></div></td>
-        <td>{{item.product.title}}</td>
-        <td><product-quantity  [product]="item.product" [shopping-cart]="cart"></product-quantity></td>
-        <td class="text-right">{{item.totalPrice | currency:'USD':true }}</td>
+        <td>
+          <div
+            [style.backgroundImage]="'url(' + item.product.imageUrl + ')'"
+            class="thumbnail"
+          ></div>
+        </td>
+        <td>{{ item.product.title }}</td>
+        <td>
+          <product-quantity
+            [product]="item.product"
+            [shopping-cart]="cart"
+          ></product-quantity>
+        </td>
+        <td class="text-right">{{ item.totalPrice | currency: "USD":true }}</td>
       </tr>
     </tbody>
     <tfoot>
@@ -23,9 +37,12 @@
         <th></th>
         <th></th>
         <th></th>
-        <th class="text-right">{{cart.totalPrice | currency:'USD':true }}</th>
+        <th class="text-right">{{ cart.totalPrice | currency: "USD":true }}</th>
       </tr>
     </tfoot>
   </table>
-  <button class="btn btn-danger btn-sm" (click)="clearCart()">Clear Shopping Cart</button>
+  <div *ngIf="cart.items.length">
+    <a routerLink="/check-out" class="btn btn-primary">Check Out</a>
+    
+  </div>
 </div>
